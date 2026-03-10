@@ -1,0 +1,26 @@
+name: Build Tweak
+
+on: 
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Theos
+      uses: Randomblock1/theos-action@v1
+      
+    - name: Build Package
+      run: make package
+      
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: NotificationsGroupCount-deb
+        path: packages/*.deb
