@@ -1,0 +1,41 @@
+name: Build Tweak
+
+on: 
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Theos with iOS 15.6 SDK
+      uses: Randomblock1/theos-action@v1
+      with:
+        theos-sdks: 'https://github.com/theos/sdks'
+        theos-sdks-branch: 'master'
+        
+    - name: Download iOS 15.6 SDK
+      run: |
+        cd $THEOS/sdks
+        curl -LO https://github.com/theos/sdks/releases/download/1/iPhoneOS15.6.sdk.tbz2
+        tar -xjf iPhoneOS15.6.sdk.tbz2
+        rm iPhoneOS15.6.sdk.tbz2
+        
+    - name: Build Package for iOS 15
+      run: |
+        export THEOS_PACKAGE_SCHEME=rootless
+        export TARGET=iphone:clang:15.6:15.0
+        export ARCHS=arm64
+        make clean
+        make package
+        
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: NotificationsGroupCount-iOS15
+        path: packages/*.deb
