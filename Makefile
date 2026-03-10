@@ -1,4 +1,4 @@
-export TARGET = iphone:clang:16.5:16.0
+export TARGET = iphone:clang:15.6:15.0
 export THEOS_DEVICE_IP = 192.168.86.47
 export THEOS_PACKAGE_SCHEME=rootless
 export FINALPACKAGE=1
